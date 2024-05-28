@@ -34,7 +34,7 @@ describe('App',()=>{
         });
       });
 
-      it('should process booking and display the confirmation button', async () => {
+      it('should process booking and user can use the confirmation button', async () => {
         const dateInputField = await screen.getByLabelText('Date');
         const timeInput= await screen.getByLabelText('Time');
         const lanesInput= await screen.getByLabelText('Number of lanes');
@@ -122,7 +122,7 @@ describe('App',()=>{
 
 //~~~~~~~~~~~~~~User Story 4: Send booking and receive confirmation~~~~~~~~~~~~~~
 
-      it("should send booking confirmation, a booking number is genarated in the form." , async()=>{
+      it("should 'send' booking confirmation,then a booking number is genarated in the form." , async()=>{
         const dateInputField = await screen.getByLabelText('Date');
         const timeInput= await screen.getByLabelText('Time');
         const lanesInput= await screen.getByLabelText('Number of lanes');
