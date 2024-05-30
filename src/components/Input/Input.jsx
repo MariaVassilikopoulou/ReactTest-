@@ -21,6 +21,7 @@ function Input({
         defaultValue={defaultValue ? defaultValue : ''}
         disabled={disabled}
         role={type === 'text' ? 'textbox' : undefined}
+        data-testid={`input-${label}`}
       />
     </section>
   );

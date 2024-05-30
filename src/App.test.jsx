@@ -123,6 +123,7 @@ describe('App',()=>{
 //~~~~~~~~~~~~~~User Story 4: Send booking and receive confirmation~~~~~~~~~~~~~~
 
       it("should 'send' booking confirmation,then a booking number is genarated in the form." , async()=>{
+      
         const dateInputField = await screen.getByLabelText('Date');
         const timeInput= await screen.getByLabelText('Time');
         const lanesInput= await screen.getByLabelText('Number of lanes');
@@ -135,19 +136,35 @@ describe('App',()=>{
         fireEvent.change(lanesInput,{target:{value:'2'}});
         fireEvent.change(playersInput,{target:{value:'2'}});
         fireEvent.click(shoeButton);
-        const shoeSizeInput= await screen.getByLabelText(/Shoe size/);
-        fireEvent.change(shoeSizeInput, {target:{value:'42'}});
+        fireEvent.click(shoeButton);
+await waitFor(()=>{
+        const shoeSizeInput1=screen.getByLabelText("Shoe size / person 1");
+        fireEvent.change(shoeSizeInput1, {target:{value:'42'}});
+        const shoeSizeInput2=screen.getByLabelText("Shoe size / person 2");
+        fireEvent.change(shoeSizeInput2, {target:{value:'42'}});
+      })
         fireEvent.click(bookingButton);
 
-        const bookingNumber= screen.queryByLabelText('Booking number');    
-          if(bookingNumber)
-          {
-            expect(bookingNumber).toBeInTheDocument();
-            expect(bookingNumber.value).toMatch(/^STR\d{4}[A-Z]{4}$/);
-          }
-      });
+       
 
-      it ('should display the booking confirmation number and the total amount', async()=>{
+        await waitFor(() => {
+        
+          expect(screen.getByText(/See you soon/i)).toBeInTheDocument();
+          const bookingNumber = screen.getByDisplayValue('STR8966APMU');
+          expect(bookingNumber).toBeInTheDocument();
+        });
+
+      });
+        //const bookingNumber= screen.queryByLabelText('Booking number');    
+        //await waitFor(()=>{
+          //expect(totalAmount.value).toMatch(/^(\d{1,3}(?:\.\d{1,2})?)sek$/);
+          //expect(bookingNumber.value).toMatch( /^STR\d{4}[A-Z]{4}$/);
+        // expect(getByText(bookingNumber).toBeInTheDocument());
+       
+          //});
+  
+
+     it ('should display the booking confirmation number and the total amount', async()=>{
         const dateInputField = screen.getByLabelText('Date');
         const timeInput = screen.getByLabelText('Time');
         const lanesInput = screen.getByLabelText('Number of lanes');
@@ -157,47 +174,53 @@ describe('App',()=>{
 
         fireEvent.change(dateInputField, { target: { value: '2023-07-25' } });
         fireEvent.change(timeInput, { target: { value: '18:00' } });
-        fireEvent.change(lanesInput, { target: { value: '2' } });
-        fireEvent.change(playersInput, { target: { value: '2' } });
+        fireEvent.change(lanesInput, { target: { value: '1' } });
+        fireEvent.change(playersInput, { target: { value: '1' } });
         fireEvent.click(shoeButton);
         const shoeSizeInput = await screen.findByLabelText(/Shoe size/);
         fireEvent.change(shoeSizeInput, { target: { value: '42' } });
         fireEvent.click(bookingButton);
         
-        const bookingNumber= screen.queryByLabelText('Booking number');
-          if(bookingNumber)
-            {
-              expect(bookingNumber).toBeInTheDocument();
-              //expect(bookingNumber.value).toMatch(/^STR\d{4}[A-Z]{4}$/);
-              expect(bookingNumber).toHaveValue('STR1234ABCD');
-            }
-
-        const totalAmount = screen.queryByLabelText('Total:');
-          if(totalAmount)
-          {
-            expect(totalAmount).toBeInTheDocument();
-            //expect(totalAmount.nextSibling).toHaveTextContent('100 sek');
-            expect(totalAmount).toHaveTextContent('100sek');
-          }
-      });
-
-
-      it('should reset form to default state when navigating back to booking view', async()=>{
-        const confirmationButton = screen.getAllByRole('button').find(button => button.textContent === "Sweet, let's go!");
-        expect(confirmationButton).toBeInTheDocument;
-
-        await waitFor(()=>{
-          const dateInputField =screen.findByLabelText('Date');
-          expect(dateInputField, { target: { value: '' } });
-
-          const timeInput=screen.getByLabelText('Time');
-          expect(timeInput,{target: {value:'' }} );
-          
-          const lanesInput= screen.getByLabelText('Number of lanes');
-          expect(lanesInput,{target:{value:''}});
-
-          const playersInput = screen.getByLabelText('Number of awesome bowlers');
-          expect(playersInput,{target:{value:''}});
+        await waitFor(() => {
+        
+          expect(screen.getByText(/See you soon/i)).toBeInTheDocument();
+          const bookingNumber = screen.getByDisplayValue('STR8966APMU');
+          expect(bookingNumber).toBeInTheDocument();
+          const totalAmount = screen.getByText(/220/);
+          expect(totalAmount).toBeInTheDocument();
         });
+        });
+    
+
+
+     it('should reset form to default state when navigating back to booking view', async()=>{
+      const dateInputField = screen.getByLabelText('Date');
+        const timeInput = screen.getByLabelText('Time');
+        const lanesInput = screen.getByLabelText('Number of lanes');
+        const playersInput = screen.getByLabelText('Number of awesome bowlers');
+        const shoeButton = screen.getByText('+');
+        const bookingButton = screen.getByText('strIIIIIike!');
+
+        fireEvent.change(dateInputField, { target: { value: '2023-07-25' } });
+        fireEvent.change(timeInput, { target: { value: '18:00' } });
+        fireEvent.change(lanesInput, { target: { value: '1' } });
+        fireEvent.change(playersInput, { target: { value: '1' } });
+        fireEvent.click(shoeButton);
+        const shoeSizeInput = await screen.findByLabelText(/Shoe size/);
+        fireEvent.change(shoeSizeInput, { target: { value: '42' } });
+        fireEvent.click(bookingButton);
+        
+        await waitFor(() => {
+        
+          expect(screen.getByText(/See you soon/i)).toBeInTheDocument();
+          const bookingNumber = screen.getByDisplayValue('STR8966APMU');
+          expect(bookingNumber).toBeInTheDocument();
+          const totalAmount = screen.getByText(/220/);
+          expect(totalAmount).toBeInTheDocument();
+        const confirmationButton = screen.getAllByRole('button').find(button => button.textContent === "Sweet, let's go!");
+        expect(confirmationButton).toBeInTheDocument();
+        const heading = screen.getByText('Booking');
+        expect(heading).toBeInTheDocument();
       });
-});
+    });
+  });

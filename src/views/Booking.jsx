@@ -110,6 +110,7 @@ function Booking() {
       };
 
       const confirmation = await sendBooking(bookingInfo);
+      console.log('CONFIRMATION:', confirmation);
       setConfirmation(confirmation);
     } else {
       setError(true);
